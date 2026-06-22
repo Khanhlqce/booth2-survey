@@ -1,0 +1,984 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>FireEye AI - Booth 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    *{
+        box-sizing:border-box;
+    }
+
+    body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f3f3f3;
+    color:#151515;
+    overflow-x:hidden;
+}
+
+    form{
+        width:100%;
+    }
+
+   .app{
+    width:100%;
+    max-width:980px;
+    min-height:720px;
+    margin:20px auto;
+    background:linear-gradient(160deg,#ffffff 75%,#fff0f0);
+    border-radius:32px;
+    padding:22px 28px 28px;
+    box-shadow:0 12px 35px rgba(0,0,0,.15);
+    position:relative;
+    overflow:hidden;
+}
+
+    .header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+    }
+
+    .logo{
+        display:flex;
+        align-items:center;
+    }
+
+    .logo img{
+        height:70px;
+        width:auto;
+    }
+
+    .logo-main{
+        font-size:22px;
+    }
+
+    .logo-sub{
+        font-size:12px;
+        color:#444;
+    }
+
+    .people{
+        font-size:13px;
+        text-align:right;
+        color:#555;
+    }
+
+    .people{
+        background:#BD2426;
+        color:white;
+        padding:12px 20px;
+        border-radius:999px;
+        font-weight:700;
+    }
+
+    .title{
+        text-align:center;
+        margin-top:4px;
+        margin-bottom:16px;
+    }
+
+    .title h1{
+        margin:0;
+        font-size:36px;
+        line-height:1.15;
+        font-weight:900;
+    }
+
+    .title span{
+        color:#BD2426;
+    }
+
+    .title p{
+        margin:8px 0 0;
+        font-size:14px;
+        color:#666;
+    }
+
+    .info{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:18px;
+        margin:18px 0 22px;
+        width:100%;
+    }
+    .info input{
+        width:100%;
+        height:52px;
+        border:1px solid #ddd;
+        padding:0 22px;
+        border-radius:18px;
+        font-size:16px;
+        outline:none;
+    }
+    .field-group{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .info input:focus{
+        border-color:#BD2426;
+    }
+
+    .content{
+        display:grid;
+        grid-template-columns:1fr 1.05fr;
+        gap:24px;
+    }
+
+    .left{
+        display:flex;
+        flex-direction:column;
+        gap:14px;
+    }
+
+    .issue-card{
+        min-height:105px;
+        border-radius:22px;
+        background:white;
+        box-shadow:0 8px 22px rgba(0,0,0,.08);
+        border:1px solid #eee;
+        padding:16px;
+        display:flex;
+        align-items:center;
+        gap:14px;
+        cursor:pointer;
+        position:relative;
+        transition:.2s;
+    }
+
+    .issue-card:hover{
+        transform:translateY(-2px);
+    }
+
+    .issue-card.active{
+        background:linear-gradient(135deg,#ff3b32,#c91f27);
+        color:white;
+        box-shadow:0 10px 25px rgba(189,36,38,.35);
+    }
+
+    .icon-box{
+        width:64px;
+        height:64px;
+        border-radius:18px;
+        background:#f5f5f5;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:34px;
+        flex-shrink:0;
+    }
+
+    .issue-card.active .icon-box{
+        background:rgba(255,255,255,.22);
+    }
+
+    .issue-text h3{
+        margin:0;
+        font-size:18px;
+        line-height:1.2;
+    }
+
+    .issue-text p{
+        margin:7px 0 0;
+        font-size:12px;
+        color:#666;
+        line-height:1.35;
+    }
+
+    .issue-card.active .issue-text p{
+        color:#ffecec;
+    }
+
+    .check{
+        position:absolute;
+        right:18px;
+        top:18px;
+        width:24px;
+        height:24px;
+        border-radius:50%;
+        background:white;
+        color:#BD2426;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        font-weight:bold;
+    }
+
+    .issue-card.active .check{
+        display:flex;
+    }
+
+    .quote{
+        margin-top:4px;
+        padding:16px;
+        border-radius:18px;
+        background:#fff4f4;
+        color:#777;
+        font-size:12px;
+        line-height:1.5;
+    }
+
+    .quote b{
+        color:#BD2426;
+    }
+
+    .right{
+        background:white;
+        border-radius:28px;
+        box-shadow:0 8px 25px rgba(0,0,0,.08);
+        padding:28px;
+        min-height:520px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .right-title{
+        text-align:center;
+    }
+
+    .right-title .small-icon{
+        width:38px;
+        height:38px;
+        border-radius:50%;
+        background:#fff0f0;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        color:#BD2426;
+        margin-bottom:8px;
+    }
+
+    .right-title h2{
+        margin:0;
+        color:#BD2426;
+        font-size:18px;
+    }
+
+    .right-title p{
+        margin:6px 0 0;
+        color:#777;
+        font-size:13px;
+    }
+
+    .big-score{
+        margin-top:16px;
+        color:#BD2426;
+        font-weight:900;
+        font-size:58px;
+        line-height:1;
+    }
+
+    .big-score span{
+        color:#777;
+        font-size:22px;
+        font-weight:500;
+    }
+
+    .status{
+        font-size:12px;
+        font-weight:700;
+        color:#BD2426;
+        margin-top:8px;
+    }
+
+    .vertical-area{
+        margin-top:18px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:14px;
+        height:250px;
+        width:100%;
+        position:relative;
+    }
+
+    .scale{
+        height:230px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        font-size:11px;
+        color:#777;
+        text-align:right;
+    }
+
+    .slider-wrap{
+        height:240px;
+        width:92px;
+        position:relative;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .done-badge{
+        position:absolute;
+        right:16px;
+        bottom:14px;
+        background:#e8fff0;
+        color:#16a34a;
+        font-size:11px;
+        font-weight:800;
+        padding:5px 10px;
+        border-radius:999px;
+        display:none;
+    }
+
+    .issue-card.rated .done-badge{
+        display:block;
+    }
+
+    .issue-card.rated:not(.active){
+        border:1px solid #b7efc5;
+    }
+
+    /* Nền xám dạng giọt/tam giác */
+    .slider-bg-shape{
+        position:absolute;
+        bottom:0;
+        left:50%;
+        transform:translateX(-50%);
+        width:24px;
+        height:240px;
+        background:linear-gradient(to top,#eeeeee,#f4f4f4);
+        clip-path:polygon(50% 100%,100% 0,0 0);
+        border-radius:18px 18px 8px 8px;
+        pointer-events:none;
+    }
+
+    /* Phần màu đỏ sẽ cao hơn và to dần khi kéo lên */
+    .slider-fill{
+        position:absolute;
+        bottom:0;
+        left:50%;
+        transform:translateX(-50%);
+        width:12px;
+        height:50%;
+        background:linear-gradient(to top,#e60000 0%,#ff2f2f 55%,#ffb2ad 100%);
+        clip-path:polygon(50% 100%,100% 0,0 0);
+        border-radius:18px 18px 8px 8px;
+        pointer-events:none;
+        filter:drop-shadow(0 8px 12px rgba(255,47,47,.22));
+        transition:height .15s ease,width .15s ease;
+    }
+
+    /* Cục tròn custom để không bị lệch */
+    .slider-knob{
+        position:absolute;
+        left:50%;
+        bottom:50%;
+        transform:translate(-50%,50%);
+        width:34px;
+        height:34px;
+        border-radius:50%;
+        background:#ff302b;
+        border:8px solid white;
+        box-shadow:0 0 0 3px #ff302b,0 6px 16px rgba(0,0,0,.22);
+        z-index:3;
+        pointer-events:none;
+        transition:bottom .15s ease;
+    }
+
+    input[type=range].vertical-slider{
+        position:absolute;
+        width:240px;
+        height:92px;
+        transform:rotate(-90deg);
+        appearance:none;
+        background:transparent;
+        z-index:4;
+        cursor:pointer;
+    }
+
+    /* Ẩn thumb mặc định, chỉ dùng để bắt thao tác kéo */
+    input[type=range].vertical-slider::-webkit-slider-thumb{
+        appearance:none;
+        width:42px;
+        height:42px;
+        border-radius:50%;
+        background:transparent;
+        cursor:pointer;
+    }
+
+    input[type=range].vertical-slider::-webkit-slider-runnable-track{
+        height:42px;
+        background:transparent;
+    }
+
+    input[type=range].vertical-slider::-moz-range-thumb{
+        width:42px;
+        height:42px;
+        border:0;
+        border-radius:50%;
+        background:transparent;
+        cursor:pointer;
+    }
+
+    .bubble{
+        position:absolute;
+        left:calc(50% + 58px);
+        top:50%;
+        transform:translateY(-50%);
+        background:white;
+        border:1px solid #ffd0d0;
+        box-shadow:0 8px 22px rgba(189,36,38,.18);
+        border-radius:18px;
+        padding:14px 18px;
+        color:#BD2426;
+        font-weight:bold;
+        min-width:118px;
+        text-align:center;
+        transition:top .15s ease;
+    }
+
+    .bubble::before{
+        content:"";
+        position:absolute;
+        left:-9px;
+        top:50%;
+        transform:translateY(-50%) rotate(45deg);
+        width:16px;
+        height:16px;
+        background:white;
+        border-left:1px solid #ffd0d0;
+        border-bottom:1px solid #ffd0d0;
+    }
+
+    .bubble small{
+        display:block;
+        color:#777;
+        font-weight:400;
+        font-size:10px;
+    }
+
+    .bottom-label{
+        margin-top:6px;
+        font-size:10px;
+        color:#999;
+    }
+
+    .done{
+        width:100%;
+        margin-top:auto;
+        border:none;
+        border-radius:30px;
+        background:linear-gradient(135deg,#ff3b32,#c91f27);
+        color:white;
+        padding:16px;
+        font-size:18px;
+        font-weight:900;
+        cursor:pointer;
+    }
+
+    .note{
+        margin-top:9px;
+        font-size:10px;
+        color:#aaa;
+        text-align:center;
+    }
+
+    .hidden-inputs{
+        display:none;
+    }
+
+    #studentWarning{
+        min-height:18px;
+        margin-top:6px;
+        font-size:13px;
+        font-weight:700;
+        color:#BD2426;
+    }
+
+   @media (max-width: 600px){
+    .app{
+        width:100vw;
+        min-height:100vh;
+        margin:0;
+        border-radius:0;
+        padding:14px;
+    }
+
+    .logo img{
+        height:42px;
+    }
+
+    .title h1{
+        font-size:22px;
+    }
+
+    .title p{
+        font-size:10px;
+    }
+
+    .info{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin:12px 0 16px;
+    }
+
+    .info input{
+        height:34px;
+        font-size:10px;
+        border-radius:12px;
+        padding:0 10px;
+    }
+
+    .content{
+        grid-template-columns:48% 52%;
+        gap:10px;
+    }
+
+    .left{
+        gap:8px;
+    }
+
+    .issue-card{
+        min-height:62px;
+        padding:8px;
+        border-radius:14px;
+        gap:8px;
+    }
+
+    .icon-box{
+        width:34px;
+        height:34px;
+        font-size:20px;
+        border-radius:10px;
+    }
+
+    .issue-text h3{
+        font-size:11px;
+        line-height:1.15;
+    }
+
+    .issue-text p{
+        font-size:8px;
+        line-height:1.2;
+    }
+
+    .check{
+        width:18px;
+        height:18px;
+        right:8px;
+        top:8px;
+        font-size:11px;
+    }
+
+    .done-badge{
+        right:8px;
+        bottom:6px;
+        font-size:7px;
+        padding:3px 6px;
+    }
+
+    .quote{
+        font-size:8px;
+        padding:10px;
+        border-radius:12px;
+    }
+
+    .right{
+        min-height:444px;
+        padding:16px;
+        border-radius:18px;
+    }
+
+    .right-title h2{
+        font-size:12px;
+    }
+
+    .right-title p{
+        font-size:9px;
+    }
+
+    .small-icon{
+        width:28px !important;
+        height:28px !important;
+        font-size:13px;
+    }
+
+    .big-score{
+        font-size:28px;
+        margin-top:14px;
+    }
+
+    .big-score span{
+        font-size:13px;
+    }
+
+    .status{
+        font-size:8px;
+    }
+
+    .vertical-area{
+        height:210px;
+        gap:8px;
+    }
+
+    .scale{
+        height:190px;
+        font-size:8px;
+    }
+
+    .slider-wrap{
+        height:190px;
+        width:54px;
+    }
+
+    .slider-bg-shape{
+        height:190px;
+        width:18px;
+    }
+
+    .slider-fill{
+        width:9px;
+    }
+
+    .slider-knob{
+        width:26px;
+        height:26px;
+        border:6px solid white;
+    }
+
+    input[type=range].vertical-slider{
+        width:190px;
+        height:54px;
+    }
+
+    .bubble{
+        left:calc(50% + 34px);
+        min-width:70px;
+        padding:8px;
+        font-size:9px;
+        border-radius:12px;
+    }
+
+    .bubble small{
+        font-size:7px;
+    }
+
+    .bottom-label{
+        font-size:7px;
+    }
+
+    .done{
+        padding:12px;
+        font-size:13px;
+        border-radius:24px;
+    }
+
+    .note{
+        font-size:7px;
+    }
+} 
+    </style>
+    </head>
+
+    <body>
+
+   <form action="/submit" method="post" onsubmit="return validateBeforeSubmit()">
+
+    <div class="app">   
+
+        <div class="header">
+        <div class="logo">
+        <img src="/static/logo.jpg" alt="FireEye Logo">
+    </div>
+
+        
+        </div>
+
+        <div class="title">
+            <h1>ĐIỀU GÌ KHIẾN<br>BẠN <span>LO NHẤT?</span></h1>
+            <p>Chọn từng vấn đề bên trái và kéo thanh trượt để đánh giá mức độ quan tâm của bạn</p>
+        </div>
+    <div class="info">
+
+        <div class="field-group">
+           <input
+    type="text"
+    name="student_id"
+    id="student_id"
+    maxlength="8"
+    placeholder="Nhập MSSV, ví dụ: CE181688"
+    required
+>
+            
+            <div id="studentWarning"></div>
+        </div>
+
+        <div class="field-group">
+            <input type="text" name="full_name" placeholder="Nhập họ và tên" required>
+        </div>
+
+    </div>
+
+        <div class="content">
+
+            <div class="left">
+
+                <div class="issue-card active" data-key="fire" onclick="selectIssue('fire')">
+                    <div class="icon-box">🔥</div>
+                    <div class="issue-text">
+                        <h3>CHÁY NỔ /<br>CHẬP ĐIỆN</h3>
+                        <p>Tôi lo sợ cháy nổ khi không có ai ở nhà.</p>
+                    </div>
+                    <div class="check">✓</div>
+                    <div class="done-badge">Đã đánh giá</div>
+                </div>
+
+                <div class="issue-card" data-key="theft" onclick="selectIssue('theft')">
+                    <div class="icon-box">🕵️</div>
+                    <div class="issue-text">
+                        <h3>TRỘM CẮP /<br>XÂM NHẬP</h3>
+                        <p>Tôi lo ngại bị đột nhập mà không ai biết.</p>
+                    </div>
+                    <div class="check">✓</div>
+                    <div class="done-badge">Đã đánh giá</div>
+                </div>
+
+                <div class="issue-card" data-key="camera" onclick="selectIssue('camera')">
+                    <div class="icon-box">📹</div>
+                    <div class="issue-text">
+                        <h3>CAMERA<br>CHỈ GHI NHẬN</h3>
+                        <p>Tôi sợ nhận cảnh báo nhưng không biết chuyện gì đang xảy ra.</p>
+                    </div>
+                    <div class="check">✓</div>
+                    <div class="done-badge">Đã đánh giá</div>
+                </div>
+
+                <div class="issue-card" data-key="remote" onclick="selectIssue('remote')">
+                    <div class="icon-box">📱</div>
+                    <div class="issue-text">
+                        <h3>KHÔNG THỂ<br>XỬ LÝ TỪ XA</h3>
+                        <p>Tôi lo ngại ở xa và không thể làm gì.</p>
+                    </div>
+                    <div class="check">✓</div>
+                    <div class="done-badge">Đã đánh giá</div>
+                </div>
+
+                <div class="issue-card" data-key="false_alarm" onclick="selectIssue('false_alarm')">
+        <div class="icon-box">🚨</div>
+        <div class="issue-text">
+            <h3>BÁO CHÁY<br>GIẢ</h3>
+            <p>Tôi lo hệ thống cảnh báo sai làm hoang mang hoặc phiền phức.</p>
+        </div>
+        <div class="check">✓</div>
+        <div class="done-badge">Đã đánh giá</div>
+    </div>
+
+                <div class="quote">
+                    ❝ Ý kiến của bạn giúp FireEye AI phát triển những giải pháp an toàn và thông minh hơn cho mọi gia đình. ❞
+                    <br><b>Cảm ơn bạn đã chia sẻ!</b>
+                </div>
+
+            </div>
+
+            <div class="right">
+
+                <div class="right-title">
+                    <div class="small-icon">🔥</div>
+                    <h2>MỨC ĐỘ QUAN TÂM</h2>
+                    <p>Kéo thanh trượt để đánh giá</p>
+                </div>
+
+                <div class="big-score">
+                    <span id="mainScore">5</span><span>/10</span>
+                </div>
+
+                <div class="status" id="statusText">ĐÁNG QUAN TÂM</div>
+
+                <div class="vertical-area">
+
+                    <div class="scale">
+                        <div>10</div>
+                        <div>9</div>
+                        <div>8</div>
+                        <div>7</div>
+                        <div>6</div>
+                        <div>5</div>
+                        <div>4</div>
+                        <div>3</div>
+                        <div>2</div>
+                        <div>1</div>
+                    </div>
+
+                    <div class="slider-wrap">
+                        <div class="slider-bg-shape"></div>
+                        <div class="slider-fill" id="sliderFill"></div>
+                        <div class="slider-knob" id="sliderKnob"></div>
+                        <input
+                            id="verticalSlider"
+                            class="vertical-slider"
+                            type="range"
+                            min="1"
+                            max="10"
+                            value="5"
+                            oninput="updateScore(this.value)">
+                    </div>
+
+                    <div class="bubble" id="scoreBubble">
+                        <small>Bạn đang chọn</small>
+                        <span id="bubbleScore">5/10</span>
+                    </div>
+
+                </div>
+
+                <div class="bottom-label">KHÔNG ĐÁNG LO</div>
+
+                <button class="done" type="submit">DONE →</button>
+
+                <div class="note">🔒 Thông tin của bạn được bảo mật tuyệt đối</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="hidden-inputs">
+        <input type="hidden" name="fire_score" id="fire_score" value="5">
+        <input type="hidden" name="theft_score" id="theft_score" value="5">
+        <input type="hidden" name="camera_score" id="camera_score" value="5">
+        <input type="hidden" name="remote_score" id="remote_score" value="5">
+        <input type="hidden" name="false_alarm_score" id="false_alarm_score" value="5">
+    </div>
+
+    </form>
+
+    <script>
+        function validateBeforeSubmit(){
+    const mssv = studentInput.value.trim().toUpperCase();
+    const pattern = /^[A-Z]{2}\d{6}$/;
+
+    if(!pattern.test(mssv)){
+        warning.innerHTML = "⚠ Vui lòng nhập đúng MSSV. Ví dụ: CE181688";
+        studentInput.focus();
+        return false;
+    }
+
+    return true;
+}
+        const studentInput = document.getElementById("student_id");
+const warning = document.getElementById("studentWarning");
+const doneButton = document.querySelector(".done");
+
+studentInput.addEventListener("input", async function () {
+    let mssv = this.value.trim().toUpperCase();
+    this.value = mssv;
+
+    const pattern = /^[A-Z]{2}\d{6}$/;
+
+    if (mssv.length === 0) {
+        warning.innerHTML = "";
+        doneButton.disabled = false;
+        doneButton.style.opacity = "1";
+        doneButton.style.cursor = "pointer";
+        return;
+    }
+
+    if (!pattern.test(mssv)) {
+        warning.innerHTML = "⚠ MSSV phải gồm 2 chữ cái và 6 chữ số. Ví dụ: CE181688";
+        doneButton.disabled = true;
+        doneButton.style.opacity = ".5";
+        doneButton.style.cursor = "not-allowed";
+        return;
+    }
+
+    try {
+        const res = await fetch(`/check-student?student_id=${encodeURIComponent(mssv)}`);
+        const data = await res.json();
+
+        if (data.exists) {
+            warning.innerHTML = "❌ MSSV này đã tham gia khảo sát";
+            doneButton.disabled = true;
+            doneButton.style.opacity = ".5";
+            doneButton.style.cursor = "not-allowed";
+        } else {
+            warning.innerHTML = "✅ MSSV hợp lệ";
+            doneButton.disabled = false;
+            doneButton.style.opacity = "1";
+            doneButton.style.cursor = "pointer";
+        }
+    } catch (error) {
+        warning.innerHTML = "⚠ Không thể kiểm tra MSSV";
+        doneButton.disabled = true;
+        doneButton.style.opacity = ".5";
+        doneButton.style.cursor = "not-allowed";
+    }
+});
+    let currentIssue = "fire";
+
+    let scores = {
+        fire: 5,
+        theft: 5,
+        camera: 5,
+        remote: 5,
+        false_alarm: 5
+    };
+
+    function selectIssue(key){
+        currentIssue = key;
+
+        document.querySelectorAll(".issue-card").forEach(card => {
+            card.classList.remove("active");
+        });
+
+        document.querySelector(`[data-key="${key}"]`).classList.add("active");
+
+        const slider = document.getElementById("verticalSlider");
+        slider.value = scores[key];
+
+        renderScore(scores[key]);
+    }
+
+    function updateScore(value){
+        scores[currentIssue] = Number(value);
+
+        document.getElementById(currentIssue + "_score").value = value;
+
+        const currentCard = document.querySelector(`[data-key="${currentIssue}"]`);
+        currentCard.classList.add("rated");
+
+        renderScore(value);
+    }
+
+    function renderScore(value){
+        value = Number(value);
+
+        document.getElementById("mainScore").innerText = value;
+        document.getElementById("bubbleScore").innerText = value + "/10";
+
+        const percent = ((value - 1) / 9) * 100;
+
+        const fill = document.getElementById("sliderFill");
+        const knob = document.getElementById("sliderKnob");
+        const bubble = document.getElementById("scoreBubble");
+
+        /* Càng kéo lên cao thì thanh càng cao và càng to */
+        fill.style.height = percent + "%";
+        fill.style.width = (10 + percent * 0.22) + "px";
+
+        /* Cục tròn và bubble đi đúng theo vị trí điểm */
+        knob.style.bottom = percent + "%";
+        bubble.style.top = (100 - percent) + "%";
+
+        const statusText = document.getElementById("statusText");
+
+        if(value <= 3){
+            statusText.innerText = "KHÔNG QUÁ LO";
+        }else if(value <= 6){
+            statusText.innerText = "ĐÁNG QUAN TÂM";
+        }else{
+            statusText.innerText = "RẤT ĐÁNG LO";
+        }
+    }
+
+    renderScore(5);
+    </script>
+
+    </body>
+    </html>
