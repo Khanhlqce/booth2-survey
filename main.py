@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import re
 
 app = FastAPI()
@@ -11,11 +11,17 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 DB_NAME = "booth2.db"
+VN_TZ = timezone(timedelta(hours=7))
+
+def now_vietnam():
+    return datetime.now(VN_TZ)
 
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
+    
     cursor = conn.cursor()
+    
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS survey (
@@ -52,7 +58,7 @@ def home(request: Request):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = now_vietnam().strftime("%Y-%m-%d")
 
     cursor.execute("""
     SELECT COUNT(*)
@@ -148,7 +154,7 @@ def submit(
             camera_score,
             remote_score,
             false_alarm_score,
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            now_vietnam().strftime("%Y-%m-%d %H:%M:%S")
         ))
 
         conn.commit()
