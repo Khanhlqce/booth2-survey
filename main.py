@@ -2,51 +2,49 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta, timezone
+import os
 import re
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
-DB_NAME = "booth2.db"
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 VN_TZ = timezone(timedelta(hours=7))
+
 
 def now_vietnam():
     return datetime.now(VN_TZ)
 
 
+def get_conn():
+    return psycopg2.connect(DATABASE_URL)
+
+
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    
+    conn = get_conn()
     cursor = conn.cursor()
-    
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS survey (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id TEXT UNIQUE,
-        full_name TEXT,
-        fire_score INTEGER,
-        theft_score INTEGER,
-        camera_score INTEGER,
-        remote_score INTEGER,
-        false_alarm_score INTEGER DEFAULT 5,
-        created_at TEXT
+        id SERIAL PRIMARY KEY,
+        student_id TEXT UNIQUE NOT NULL,
+        full_name TEXT NOT NULL,
+        fire_score INTEGER NOT NULL,
+        theft_score INTEGER NOT NULL,
+        camera_score INTEGER NOT NULL,
+        remote_score INTEGER NOT NULL,
+        false_alarm_score INTEGER NOT NULL DEFAULT 5,
+        created_at TEXT NOT NULL
     )
     """)
 
-    cursor.execute("PRAGMA table_info(survey)")
-    columns = [col[1] for col in cursor.fetchall()]
-
-    if "false_alarm_score" not in columns:
-        cursor.execute("""
-        ALTER TABLE survey
-        ADD COLUMN false_alarm_score INTEGER DEFAULT 5
-        """)
-
     conn.commit()
+    cursor.close()
     conn.close()
 
 
@@ -55,7 +53,7 @@ init_db()
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_conn()
     cursor = conn.cursor()
 
     today = now_vietnam().strftime("%Y-%m-%d")
@@ -63,10 +61,12 @@ def home(request: Request):
     cursor.execute("""
     SELECT COUNT(*)
     FROM survey
-    WHERE DATE(created_at) = ?
+    WHERE LEFT(created_at, 10) = %s
     """, (today,))
 
     total_today = cursor.fetchone()[0]
+
+    cursor.close()
     conn.close()
 
     return templates.TemplateResponse(
@@ -87,15 +87,17 @@ def check_student(student_id: str):
             "message": "MSSV phải gồm 2 chữ cái và 6 chữ số. Ví dụ: CE181688"
         }
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT 1 FROM survey WHERE student_id = ?",
+        "SELECT 1 FROM survey WHERE student_id = %s",
         (student_id,)
     )
 
     exists = cursor.fetchone() is not None
+
+    cursor.close()
     conn.close()
 
     if exists:
@@ -131,10 +133,11 @@ def submit(
     if len(full_name) < 2:
         return RedirectResponse(url="/", status_code=303)
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_conn()
+    cursor = conn.cursor()
 
     try:
-        conn.execute("""
+        cursor.execute("""
         INSERT INTO survey (
             student_id,
             full_name,
@@ -145,7 +148,7 @@ def submit(
             false_alarm_score,
             created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             student_id,
             full_name,
@@ -159,10 +162,13 @@ def submit(
 
         conn.commit()
 
-    except sqlite3.IntegrityError:
+    except psycopg2.errors.UniqueViolation:
+        conn.rollback()
+        cursor.close()
         conn.close()
         return RedirectResponse(url="/?duplicate=1", status_code=303)
 
+    cursor.close()
     conn.close()
 
     return RedirectResponse(url="/thanks", status_code=303)
@@ -178,7 +184,7 @@ def thanks(request: Request):
 
 @app.get("/admin", response_class=HTMLResponse)
 def admin(request: Request):
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("SELECT COUNT(*) FROM survey")
@@ -210,6 +216,7 @@ def admin(request: Request):
     """)
     students = cursor.fetchall()
 
+    cursor.close()
     conn.close()
 
     return templates.TemplateResponse(
