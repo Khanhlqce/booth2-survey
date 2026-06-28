@@ -118,11 +118,9 @@ def check_student(student_id: str):
 def submit(
     student_id: str = Form(...),
     full_name: str = Form(...),
-    fire_score: int = Form(...),
     theft_score: int = Form(...),
-    camera_score: int = Form(...),
-    remote_score: int = Form(...),
-    false_alarm_score: int = Form(...)
+    fire_score: int = Form(...),
+    safety_score: int = Form(...)
 ):
     student_id = student_id.strip().upper()
     full_name = full_name.strip()
@@ -149,14 +147,14 @@ def submit(
             created_at
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (
+                """, (
             student_id,
             full_name,
             fire_score,
             theft_score,
-            camera_score,
-            remote_score,
-            false_alarm_score,
+            safety_score,
+            5,
+            5,
             now_vietnam().strftime("%Y-%m-%d %H:%M:%S")
         ))
 
@@ -192,24 +190,20 @@ def admin(request: Request):
 
     cursor.execute("""
     SELECT
-        ROUND(AVG(fire_score), 1),
         ROUND(AVG(theft_score), 1),
-        ROUND(AVG(camera_score), 1),
-        ROUND(AVG(remote_score), 1),
-        ROUND(AVG(false_alarm_score), 1)
+        ROUND(AVG(fire_score), 1),
+        ROUND(AVG(camera_score), 1)
     FROM survey
     """)
     avg = cursor.fetchone()
 
     cursor.execute("""
-    SELECT
+     SELECT
         student_id,
         full_name,
-        fire_score,
         theft_score,
+        fire_score,
         camera_score,
-        remote_score,
-        false_alarm_score,
         created_at
     FROM survey
     ORDER BY id DESC

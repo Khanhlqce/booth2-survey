@@ -720,55 +720,35 @@
 
             <div class="left">
 
-                <div class="issue-card active" data-key="fire" onclick="selectIssue('fire')">
-                    <div class="icon-box">🔥</div>
-                    <div class="issue-text">
-                        <h3>CHÁY NỔ /<br>CHẬP ĐIỆN</h3>
-                        <p>Tôi lo sợ cháy nổ khi không có ai ở nhà.</p>
-                    </div>
-                    <div class="check">✓</div>
-                    <div class="done-badge">Đã đánh giá</div>
-                </div>
-
-                <div class="issue-card" data-key="theft" onclick="selectIssue('theft')">
-                    <div class="icon-box">🕵️</div>
-                    <div class="issue-text">
-                        <h3>TRỘM CẮP /<br>XÂM NHẬP</h3>
-                        <p>Tôi lo ngại bị đột nhập mà không ai biết.</p>
-                    </div>
-                    <div class="check">✓</div>
-                    <div class="done-badge">Đã đánh giá</div>
-                </div>
-
-                <div class="issue-card" data-key="camera" onclick="selectIssue('camera')">
-                    <div class="icon-box">📹</div>
-                    <div class="issue-text">
-                        <h3>CAMERA<br>CHỈ GHI NHẬN</h3>
-                        <p>Tôi sợ nhận cảnh báo nhưng không biết chuyện gì đang xảy ra.</p>
-                    </div>
-                    <div class="check">✓</div>
-                    <div class="done-badge">Đã đánh giá</div>
-                </div>
-
-                <div class="issue-card" data-key="remote" onclick="selectIssue('remote')">
-                    <div class="icon-box">📱</div>
-                    <div class="issue-text">
-                        <h3>KHÔNG THỂ<br>XỬ LÝ TỪ XA</h3>
-                        <p>Tôi lo ngại ở xa và không thể làm gì.</p>
-                    </div>
-                    <div class="check">✓</div>
-                    <div class="done-badge">Đã đánh giá</div>
-                </div>
-
-                <div class="issue-card" data-key="false_alarm" onclick="selectIssue('false_alarm')">
-        <div class="icon-box">🚨</div>
-        <div class="issue-text">
-            <h3>BÁO CHÁY<br>GIẢ</h3>
-            <p>Tôi lo hệ thống cảnh báo sai làm hoang mang hoặc phiền phức.</p>
-        </div>
-        <div class="check">✓</div>
-        <div class="done-badge">Đã đánh giá</div>
+                <div class="issue-card active" data-key="theft" onclick="selectIssue('theft')">
+    <div class="icon-box">🕵️</div>
+    <div class="issue-text">
+        <h3>AN NINH</h3>
+        <p>Bạn lo lắng về an ninh ở mức độ nào?</p>
     </div>
+    <div class="check">✓</div>
+    <div class="done-badge">Đã đánh giá</div>
+</div>
+
+<div class="issue-card" data-key="fire" onclick="selectIssue('fire')">
+    <div class="icon-box">🔥</div>
+    <div class="issue-text">
+        <h3>CHÁY NỔ</h3>
+        <p>Bạn lo lắng về nguy cơ cháy nổ ở mức độ nào?</p>
+    </div>
+    <div class="check">✓</div>
+    <div class="done-badge">Đã đánh giá</div>
+</div>
+
+<div class="issue-card" data-key="safety" onclick="selectIssue('safety')">
+    <div class="icon-box">🛡️</div>
+    <div class="issue-text">
+        <h3>MỨC ĐỘ AN TOÀN</h3>
+        <p>Bạn nghĩ không gian hiện tại của mình an toàn ở mức độ nào?</p>
+    </div>
+    <div class="check">✓</div>
+    <div class="done-badge">Đã đánh giá</div>
+</div>
 
                 <div class="quote">
                     ❝ Ý kiến của bạn giúp FireEye AI phát triển những giải pháp an toàn và thông minh hơn cho mọi gia đình. ❞
@@ -839,12 +819,12 @@
 
     </div>
 
-    <div class="hidden-inputs">
-        <input type="hidden" name="fire_score" id="fire_score" value="5">
-        <input type="hidden" name="theft_score" id="theft_score" value="5">
-        <input type="hidden" name="camera_score" id="camera_score" value="5">
-        <input type="hidden" name="remote_score" id="remote_score" value="5">
-        <input type="hidden" name="false_alarm_score" id="false_alarm_score" value="5">
+     
+       <div class="hidden-inputs">
+    <input type="hidden" name="theft_score" id="theft_score" value="5">
+    <input type="hidden" name="fire_score" id="fire_score" value="5">
+    <input type="hidden" name="safety_score" id="safety_score" value="5">
+</div>
     </div>
 
     </form>
@@ -910,15 +890,13 @@ studentInput.addEventListener("input", async function () {
         doneButton.style.cursor = "not-allowed";
     }
 });
-    let currentIssue = "fire";
+   let currentIssue = "theft";
 
-    let scores = {
-        fire: 5,
-        theft: 5,
-        camera: 5,
-        remote: 5,
-        false_alarm: 5
-    };
+let scores = {
+    theft: 5,
+    fire: 5,
+    safety: 5
+};
 
     function selectIssue(key){
         currentIssue = key;

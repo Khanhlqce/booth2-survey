@@ -72,7 +72,7 @@ body{
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:18px;
     margin:28px 0;
 }
@@ -190,7 +190,7 @@ td.score{
 
             <div class="title">
                 <h1>THỐNG KÊ <span>KHẢO SÁT</span></h1>
-                <p>Dữ liệu mức độ quan tâm của người tham gia</p>
+                <p>Dữ liệu mức độ lo lắng và đánh giá an toàn của người tham gia</p>
             </div>
         </div>
 
@@ -203,8 +203,8 @@ td.score{
     <div class="cards">
 
         <div class="card">
-            <div class="icon">🔥</div>
-            <h3>Cháy nổ</h3>
+            <div class="icon">🕵️</div>
+            <h3>Lo lắng trộm cắp</h3>
             <div class="percent">{{ ((avg[0] or 0) * 10) | round(0) | int }}%</div>
             <div class="bar">
                 <div class="fill" style="--percent: {{ ((avg[0] or 0) * 10) | round(0) | int }};"></div>
@@ -212,8 +212,8 @@ td.score{
         </div>
 
         <div class="card">
-            <div class="icon">🕵️</div>
-            <h3>Trộm cắp</h3>
+            <div class="icon">🔥</div>
+            <h3>Lo lắng cháy nổ</h3>
             <div class="percent">{{ ((avg[1] or 0) * 10) | round(0) | int }}%</div>
             <div class="bar">
                 <div class="fill" style="--percent: {{ ((avg[1] or 0) * 10) | round(0) | int }};"></div>
@@ -221,31 +221,13 @@ td.score{
         </div>
 
         <div class="card">
-            <div class="icon">📹</div>
-            <h3>Camera giám sát</h3>
+            <div class="icon">🛡️</div>
+            <h3>Mức độ an toàn</h3>
             <div class="percent">{{ ((avg[2] or 0) * 10) | round(0) | int }}%</div>
             <div class="bar">
                 <div class="fill" style="--percent: {{ ((avg[2] or 0) * 10) | round(0) | int }};"></div>
             </div>
         </div>
-
-        <div class="card">
-            <div class="icon">📱</div>
-            <h3>Xử lý từ xa</h3>
-            <div class="percent">{{ ((avg[3] or 0) * 10) | round(0) | int }}%</div>
-            <div class="bar">
-                <div class="fill" style="--percent: {{ ((avg[3] or 0) * 10) | round(0) | int }};"></div>
-            </div>
-        </div>
-
-        <div class="card">
-    <div class="icon">🚨</div>
-    <h3>Báo cháy giả</h3>
-    <div class="percent">{{ ((avg[4] or 0) * 10) | round(0) | int }}%</div>
-    <div class="bar">
-        <div class="fill" style="--percent: {{ ((avg[4] or 0) * 10) | round(0) | int }};"></div>
-    </div>
-</div>
 
     </div>
 
@@ -255,11 +237,9 @@ td.score{
                 <tr>
                     <th>MSSV</th>
                     <th>Họ tên</th>
-                    <th>Cháy nổ</th>
                     <th>Trộm cắp</th>
-                    <th>Camera</th>
-                    <th>Từ xa</th>  
-                    <th>Báo cháy giả</th>
+                    <th>Cháy nổ</th>
+                    <th>Mức độ an toàn</th>
                     <th>Thời gian</th>
                 </tr>
             </thead>
@@ -272,13 +252,11 @@ td.score{
                     <td class="score">{{ s[2] * 10 }}%</td>
                     <td class="score">{{ s[3] * 10 }}%</td>
                     <td class="score">{{ s[4] * 10 }}%</td>
-                    <td class="score">{{ s[5] * 10 }}%</td>
-                    <td class="score">{{ s[6] * 10 }}%</td>
-                    <td>{{ s[7] }}</td>
+                    <td>{{ s[5] }}</td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="8" class="empty">Chưa có dữ liệu khảo sát</td>
+                    <td colspan="6" class="empty">Chưa có dữ liệu khảo sát</td>
                 </tr>
                 {% endfor %}
             </tbody>
