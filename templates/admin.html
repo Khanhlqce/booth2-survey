@@ -7,6 +7,20 @@
 <style>
 *{ box-sizing:border-box; }
 
+.export-btn{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    background:#BD2426;
+    color:white;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:bold;
+}
+
+.export-btn:hover{
+    background:#9f1d20;
+}
 body{
     margin:0;
     font-family:Arial, sans-serif;
@@ -194,10 +208,12 @@ td.score{
             </div>
         </div>
 
-        <div class="total">
-            👥 <b>{{ total }}</b><br>
-            lượt tham gia
-        </div>
+      <div class="total">
+    👥 <b>{{ total }}</b><br>
+    lượt tham gia
+    <br><br>
+    <a href="/export-excel" class="export-btn">⬇ Xuất Excel</a>
+</div>
     </div>
 
     <div class="cards">

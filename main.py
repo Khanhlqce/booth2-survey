@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import psycopg2
@@ -7,6 +7,8 @@ from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta, timezone
 import os
 import re
+from openpyxl import Workbook
+from io import BytesIO
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -220,5 +222,63 @@ def admin(request: Request):
             "total": total,
             "avg": avg,
             "students": students
+        }
+    )
+@app.get("/export-excel")
+def export_excel():
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        student_id,
+        full_name,
+        theft_score,
+        fire_score,
+        camera_score,
+        created_at
+    FROM survey
+    ORDER BY id DESC
+    """)
+
+    students = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Survey Results"
+
+    ws.append([
+        "MSSV",
+        "Họ tên",
+        "Lo lắng trộm cắp",
+        "Lo lắng cháy nổ",
+        "Mức độ an toàn",
+        "Thời gian khảo sát"
+    ])
+
+    for s in students:
+        ws.append([
+            s[0],
+            s[1],
+            f"{s[2] * 10}%",
+            f"{s[3] * 10}%",
+            f"{s[4] * 10}%",
+            s[5]
+        ])
+
+    file_stream = BytesIO()
+    wb.save(file_stream)
+    file_stream.seek(0)
+
+    filename = f"fireeye_survey_{now_vietnam().strftime('%Y%m%d_%H%M%S')}.xlsx"
+
+    return StreamingResponse(
+        file_stream,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}"
         }
     )
