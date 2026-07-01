@@ -282,3 +282,16 @@ def export_excel():
             "Content-Disposition": f"attachment; filename={filename}"
         }
     )
+@app.get("/reset-db")
+def reset_db():
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("TRUNCATE TABLE survey RESTART IDENTITY")
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return {"message": "Database reset success"}
